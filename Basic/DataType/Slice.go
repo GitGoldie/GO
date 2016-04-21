@@ -86,60 +86,95 @@ func removeArray(strings []string, option string, idx int) []string {
 }
 
 
-func main(){	
-	
+func main(){
+	/* Slice Misc */
+	slice_example1()
+	/* slice from other slices */
+	slice_example2()
+	/* 2D Array/Slice */
+	slice_example3()
+}
+
+func slice_example1() {
+	fmt.Println("\nslice example 1 >>")
 	c0 := 'c'
 	s0 := "c"
 	s1 := "fooStr"
-	fmt.Println(">>------ sizeof integer vs. strings")
-	fmt.Printf("sizeof(%T):%d  sizeof(%T):%d  sizeof(%T):%d\n",c0,unsafe.Sizeof(c0), s0,unsafe.Sizeof(s0), s1, unsafe.Sizeof(s1))	
-		
-	// Note : this generate 13 element insstead of 12
+	fmt.Println("\t------ sizeof integer vs. strings")
+	fmt.Printf("\t\tsizeof(%T):%d  sizeof(%T):%d  sizeof(%T):%d\n",c0,unsafe.Sizeof(c0), s0,unsafe.Sizeof(s0), s1, unsafe.Sizeof(s1))
+
+	// Note : this generate 13 element instead of 12
 	months := [...]string{1:"Jan",2:"Feb",3:"Mar",4:"Apr",5:"May",6:"Jun",7:"Jul",8:"Aug",9:"Sep",10:"Oct",11:"Nov",12:"Dec"}
 	//reverse array
-	reverse(months[:]) //(error) reversa(months) 	//it will generate error "type [13]string []string"	
+	reverse(months[:]) //(error) reversa(months) 	//it will generate error "type [13]string []string"
 	//slices
 	spring := months[3:6]
-	fmt.Println(">>------ slice and comparison")
-	Q1 := months[1:4]	
+	fmt.Println("\t------ slice and comparison")
+	Q1 := months[1:4]
 	for _, s := range spring {
 		for _, q := range Q1 {
 			if s == q {
-				fmt.Printf("%s belongs to Spring and Q1\n",s)
+				fmt.Printf("\t\t%s belongs to Spring and Q1\n",s)
 			}
 		}
 	}
-	
+
 	//append considering capacity
 	array := make([]int, 1, 3)  //syntax(type,len,cap) and cap is ommitted ==> cap <= len
-	//array = []int{1,2,3} //it overwrite cap 
+	//array = []int{1,2,3} //it overwrite cap
 	array[0] = 1
-	fmt.Println(">>------ append/extend(reslice): ",array,"len:",len(array),",cap:",cap(array))
+	fmt.Println("\t------ append/extend(reslice): ",array,"len:",len(array),",cap:",cap(array))
 	array = appendInt(array,rand.Intn(100))
-	fmt.Println("[Custom:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
+	fmt.Println("\t\t[Custom:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
 	array = appendIntMult(array,rand.Intn(100),rand.Intn(100),rand.Intn(100))
-	fmt.Println("[Custom:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
-	
-	
+	fmt.Println("\t\t[Custom:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
+
+
 	//built-int append
 	for i:=0; i<7; i++ {
 		array = append(array, rand.Intn(1000))
 	}
-	fmt.Println("[Built-in:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
-	
+	fmt.Println("\t\t[Built-in:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
+
 	array = append(array, 1,2,3,4,5,6,7)
-	fmt.Println("[Built-in:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
-	
-	//string array and remove empty element & shift 
+	fmt.Println("\t\t[Built-in:Append] Array=",array,",len: ",len(array), "cap: ",cap(array))
+
+	//string array and remove empty element & shift
 	strArray := []string{"cat","","dog","","bluejay"}
 	strArray = removeArray(strArray,"empty",0)
-	fmt.Println("[Custom:Remove] strArray=",strArray,",len: ",len(strArray), "cap: ",cap(strArray))
+	fmt.Println("\t\t[Custom:Remove] strArray=",strArray,",len: ",len(strArray), "cap: ",cap(strArray))
 	strArray = removeArray(strArray,"index",1)
-	fmt.Println("[Custom:Remove] strArray=",strArray,",len: ",len(strArray), "cap: ",cap(strArray))
-	
+	fmt.Println("\t\t[Custom:Remove] strArray=",strArray,",len: ",len(strArray), "cap: ",cap(strArray))
+
+
+}
+
+/*
+ * Slice generation from other slices
+ */
+func slice_example2(){
+	fmt.Println("\nslice example 2 >>")
 	slice1 := []int{1,2,3}
-	slice2 := []int{11,22,33} 
+	slice2 := []int{11,22,33}
 	slice12 := append(slice1,slice2...)
 	slice3 := append([]int(nil), slice12...)  //Note : ... (must)
-	fmt.Println(slice12,"\n",slice3)
+	fmt.Println("\t",slice1,"+",slice2,"is\t",slice12," or ",slice3)
+}
+/*
+ * 2D array through empty slice
+ */
+func slice_example3() {
+	fmt.Println("\nslice example 3 >>")
+	/* empty slice */
+	matrix := [][]int{}
+
+	/* contents inside */
+	LENGTH := []int{2,3,4}
+	for _,len := range LENGTH {
+		temp := []int{}
+		for i:=0; i<len; i++ { temp = append(temp,i)}
+		matrix = append(matrix, temp)
+	}
+
+	fmt.Println("\t2D array : ",matrix)
 }
